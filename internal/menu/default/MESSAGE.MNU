@@ -1,0 +1,12 @@
+7,0,2,15
+C,C,Change Conference,10
+E,E,Enter a Message,10
+R,R,Read Messages,10
+N,N,New Messages,10
+Y,Y,Your Messages,10
+S,S,Text Search Messages,10
+Q,Q,Queue Conferences,10
+M,M,Main Menu,0
+X,X,Expert Mode,10
+P,P,Page Sysop,0
+G,G,Goodbye,0

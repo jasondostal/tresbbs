@@ -1,0 +1,15 @@
+7,0,5,15
+C,C,Change File Area,10
+L,L,List Files,10
+N,N,New Files,10
+T,T,Text Search File Lists,10
+E,E,Edit Batch Queue,10
+U,U,Upload File,10
+D,D,Download File,10
+V,V,View Archive,10
+R,R,Remove File,100
+O,O,Move File,100
+M,M,Main Menu,10
+X,X,Expert Mode,10
+P,P,Page Sysop,10
+G,G,Goodbye,10

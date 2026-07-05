@@ -1,0 +1,4 @@
+System: TresBBS (Go, ports-and-adapters)
+Access: telnet + SSH
+Formats: reads original TriBBS .DAT files (drop your old board in and go)
+Transfers: X/Y/Zmodem with real CRC-16

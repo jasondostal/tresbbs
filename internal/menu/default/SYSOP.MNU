@@ -1,0 +1,11 @@
+7,0,3,15
+U,U,Edit Users,100
+C,C,Edit Message Conferences,100
+F,F,Edit File Areas,100
+E,E,Edit Events,100
+V,V,View Callers Log,100
+S,S,Sort File Lists,100
+M,M,Main Menu,10
+X,X,Expert Mode,10
+P,P,Page Sysop,10
+G,G,Goodbye,0

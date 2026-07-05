@@ -1,0 +1,22 @@
+# TresBBS new-user questionnaire (NEWUSER.QUE)
+#
+# One question per line. Format:
+#   field|Prompt text      -> answer is stored in that user-record field
+#   ?|Prompt text          -> free-form question, answer saved to answers/<alias>.ANS
+#   Prompt text            -> same as ?| (free-form)
+#
+# Bound fields: alias name city phone street state zip email password
+# (alias and password are always required; added automatically if omitted.)
+# Lines starting with # and blank lines are ignored. Edit freely.
+
+alias|Choose an alias:
+name|Your real name:
+city|Your city:
+phone|Phone number:
+street|Street address (optional):
+state|State (optional):
+zip|ZIP code (optional):
+email|Email address (optional):
+password|Choose a password:
+?|What was your first computer?
+?|How did you hear about this BBS?

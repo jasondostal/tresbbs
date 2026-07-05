@@ -1,0 +1,19 @@
+6,0,1,15
+B,B,Bulletin Menu,10
+M,M,Message Menu,10
+F,F,File Menu,10
+D,D,Door Menu,10
+T,T,TeleChat Menu,10
+Q,Q,Questionaire Menu,999
+S,S,Sysop Menu,100
+C,C,Comment to Sysop,10
+A,A,Toggle ANSI Graphics,10
+R,R,Toggle RIPScrip Graphics,999
+N,N,Newsletter,10
+Y,Y,Your Personal Information,10
+I,I,System Information,10
+U,U,List of Users,10
+W,W,Who's On,10
+X,X,Expert Mode,10
+P,P,Page Sysop,10
+G,G,Goodbye,0

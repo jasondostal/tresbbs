@@ -1,0 +1,10 @@
+                         Welcome to TresBBS!
+
+  A spiritual successor to TriBBS, running on modern iron. You dialed in
+  over telnet, but the soul is pure 1994: @VARIABLE screens, message
+  conferences, file areas, doors, and multinode chat.
+
+  Type your way around from the main menu. New files land in the file
+  areas; leave a message in a conference; page another node for a chat.
+
+  - The Management

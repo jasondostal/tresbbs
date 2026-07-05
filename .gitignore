@@ -1,0 +1,27 @@
+# Binaries (anchored to repo root so they don't match cmd/* source dirs)
+/tribbs-admin
+
+# Database
+*.db
+*.db-wal
+*.db-shm
+
+# OS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+/tresbbs-server
+testdata/tribbs-real/
+STATE.md
+
+# Runtime logs
+bbs.log
+bbs.run.log
+
+# New-user questionnaire answers (runtime)
+answers/
+
+# Internal reverse-engineering / parity working notes — kept local, not shipped
+docs/specs/

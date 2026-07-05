@@ -1,0 +1,5 @@
+Classic door games worth hunting down:
+  Legend of the Red Dragon (LORD)   - forest combat, the Inn, PvP grudges
+  TradeWars 2002                     - galactic trading + treachery
+  Usurper, Barren Realms Elite, BRE  - empire management
+Run them via a DOS emulator's DOOR32.SYS seam. (That part still needs DOS.)

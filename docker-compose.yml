@@ -1,0 +1,11 @@
+services:
+  tresbbs:
+    build: .
+    ports:
+      - "2323:2323"  # Telnet
+    volumes:
+      - tresbbs-data:/bbs/data
+    restart: unless-stopped
+
+volumes:
+  tresbbs-data:

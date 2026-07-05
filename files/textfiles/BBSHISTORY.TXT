@@ -1,0 +1,7 @@
+A brief, incomplete history of the BBS:
+  1978  Ward & Randy fire up CBBS in a Chicago snowstorm.
+  1984  FidoNet stitches the boards together over midnight long-distance.
+  1991  Door games (LORD, TradeWars) eat everyone's evenings.
+  1994  TriBBS 5.01. This is the one we're rebuilding.
+  1995+ The web arrives; the boards quiet but never fully die.
+  now   You're reading this on a clone that reads the real DAT files.
