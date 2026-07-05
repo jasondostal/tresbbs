@@ -13,7 +13,7 @@ import (
 // sysopMenu is the caller-facing sysop menu, rendered from SYSOP.MNU. It mirrors
 // TriBBS's lean in-BBS sysop command set (U C F E V S); the heavier operator
 // functions — Pack, System Config, Configure Node, Drop to Shell, Local Logon,
-// EchoMail, Edit Doors/Bulletins — live in the tribbs-admin TUI console (the
+// EchoMail, Edit Doors/Bulletins — live in the tresbbs-admin TUI console (the
 // TRIMAN/WFC equivalent). Returns quit=true if the caller chose Goodbye.
 func (s *Session) sysopMenu() bool {
 	return s.menuLoop("SYSOP.MNU", "Sysop Menu", map[byte]func(){

@@ -1,4 +1,4 @@
-// tribbs-admin is the sysop console for TresBBS — a keyboard-first, dark-themed
+// tresbbs-admin is the sysop console for TresBBS — a keyboard-first, dark-themed
 // terminal UI for offline board management. It is the modern replacement for
 // TriBBS's DOS-era TRIMAN admin tool.
 //
@@ -9,7 +9,7 @@
 //
 // Usage:
 //
-//	tribbs-admin [-db board.db]
+//	tresbbs-admin [-db board.db]
 //
 // Navigation:
 //
@@ -53,7 +53,7 @@ func main() {
 
 	storage, err := sqlite.New(*dbPath)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "tribbs-admin: cannot open database %q: %v\n", *dbPath, err)
+		fmt.Fprintf(os.Stderr, "tresbbs-admin: cannot open database %q: %v\n", *dbPath, err)
 		os.Exit(1)
 	}
 	defer storage.Close()
@@ -68,7 +68,7 @@ func main() {
 	a.build()
 
 	if err := a.app.Run(); err != nil {
-		fmt.Fprintf(os.Stderr, "tribbs-admin: %v\n", err)
+		fmt.Fprintf(os.Stderr, "tresbbs-admin: %v\n", err)
 		os.Exit(1)
 	}
 }

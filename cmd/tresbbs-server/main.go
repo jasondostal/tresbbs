@@ -7,7 +7,7 @@
 //
 //	tresbbs-server [flags]
 //	  -addr string      Listen address (default ":2323")
-//	  -db string         Database path (default "tribbs.db")
+//	  -db string         Database path (default "tresbbs.db")
 //	  -ssh string        SSH listen address (e.g., ":2222", empty to disable)
 //	  -hostkey string    SSH host key path (default "ssh_host_key")
 package main
@@ -36,7 +36,7 @@ import (
 func main() {
 	var (
 		addr     = flag.String("addr", ":2323", "Telnet listen address")
-		dbPath   = flag.String("db", "tribbs.db", "SQLite database path")
+		dbPath   = flag.String("db", "tresbbs.db", "SQLite database path")
 		sshAddr   = flag.String("ssh", "", "SSH listen address (e.g. :2222)")
 		hostKey   = flag.String("hostkey", "ssh_host_key", "SSH host key path")
 		menuDir   = flag.String("menus", "", "Directory of TriBBS .MNU menu files (a dropped-in NWORK/); empty uses the built-in stock menus")
@@ -46,7 +46,7 @@ func main() {
 	flag.Parse()
 
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
-	log.Printf("tribbs v%s starting...", domain.Version)
+	log.Printf("tresbbs v%s starting...", domain.Version)
 
 	// Initialize storage
 	storage, err := sqlite.New(*dbPath)

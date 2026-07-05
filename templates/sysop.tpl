@@ -13,6 +13,6 @@
 @X0F║   <M> Pack Message Base   <N> Configure Node                ║
 @X0F║   <O> Drop to DOS         <G> Local Logon                   ║
 @X0A╠══════════════════════════════════════════════════════════════╣
-@X0F║   <X> Exit TriBBS                                           ║
+@X0F║   <X> Exit TresBBS                                          ║
 @X0A╚══════════════════════════════════════════════════════════════╝
 @X0F

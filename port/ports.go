@@ -23,7 +23,7 @@ import (
 // DisplayPort — Terminal Output
 //
 // In original TriBBS, this was direct video memory writes or ANSI
-// escape sequences over the serial port. In tribbs, it's an ANSI
+// escape sequences over the serial port. In tresbbs, it's an ANSI
 // terminal over SSH/Telnet or a Bubble Tea TUI.
 //
 // The key insight: the template engine calls these methods to render
@@ -85,7 +85,7 @@ type DisplayPort interface {
 // StoragePort — Data Persistence
 //
 // In original TriBBS, this was binary files (USERS.DAT, FAREA.DAT,
-// M*.IDX, etc.). In tribbs, it's SQLite.
+// M*.IDX, etc.). In tresbbs, it's SQLite.
 //
 // The interface is the same either way — the domain doesn't care
 // how data is stored, just that it can load and save records.
@@ -161,7 +161,7 @@ type StoragePort interface {
 // NodePort — Multinode Coordination
 //
 // In original TriBBS, this was file-based semaphores on a shared
-// network drive. In tribbs, it's in-memory coordination via goroutines
+// network drive. In tresbbs, it's in-memory coordination via goroutines
 // and channels.
 //
 // The interface is the same — the domain doesn't care how nodes
@@ -235,7 +235,7 @@ type SessionPort interface {
 // DoorRunnerPort — External Door Execution
 //
 // In original TriBBS, doors were launched via SPAWNO (overlay swap).
-// In tribbs, they're launched as subprocesses.
+// In tresbbs, they're launched as subprocesses.
 //
 // The door runner writes drop files, executes the door, and reads
 // back the results.

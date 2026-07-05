@@ -18,7 +18,7 @@ import "time"
 // tells us the name field is 30 characters).
 //
 // In the original TriBBS, this was a fixed-length binary record in
-// USERS.DAT. In tribbs, it's stored in SQLite with the same semantics.
+// USERS.DAT. In tresbbs, it's stored in SQLite with the same semantics.
 // ===================================================================
 
 type User struct {
@@ -91,7 +91,7 @@ type User struct {
 // Node Status
 //
 // In original TriBBS, this was written to %s\NODE%d.%d files for
-// inter-node awareness. In tribbs, it's an in-memory struct shared
+// inter-node awareness. In tresbbs, it's an in-memory struct shared
 // via goroutines.
 // ===================================================================
 
@@ -113,7 +113,7 @@ type NodeStatus struct {
 // Message / Conference
 //
 // The message base. In original TriBBS, messages were stored in
-// packed binary files (M*.IDX). In tribbs, they're in SQLite.
+// packed binary files (M*.IDX). In tresbbs, they're in SQLite.
 // ===================================================================
 
 type Conference struct {
@@ -139,7 +139,7 @@ type Post struct {
 // File Area
 //
 // File areas are directories of downloadable files. In original TriBBS,
-// each area had a FAREA.DAT entry and a FILES.BAK list. In tribbs,
+// each area had a FAREA.DAT entry and a FILES.BAK list. In tresbbs,
 // they're tracked in SQLite with actual files on disk.
 // ===================================================================
 

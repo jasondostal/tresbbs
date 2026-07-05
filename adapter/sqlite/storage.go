@@ -1,7 +1,7 @@
 // Package sqlite implements the StoragePort using SQLite.
 //
 // In original TriBBS, data was stored in binary files (USERS.DAT, FAREA.DAT,
-// etc.). In tribbs, we use SQLite for the same data with the same semantics —
+// etc.). In tresbbs, we use SQLite for the same data with the same semantics —
 // fixed-length user records, indexed lookups, and audit logging.
 package sqlite
 
@@ -153,7 +153,7 @@ func (s *Storage) migrate() error {
 		)`,
 		`CREATE TABLE IF NOT EXISTS config (
 			id INTEGER PRIMARY KEY CHECK (id = 1),
-			board_name TEXT DEFAULT 'TriBBS',
+			board_name TEXT DEFAULT 'TresBBS',
 			sysop_name TEXT DEFAULT 'Sysop',
 			system_password TEXT DEFAULT '',
 			max_nodes INTEGER DEFAULT 1,
@@ -206,7 +206,7 @@ func (s *Storage) migrate() error {
 
 	// Insert default config if not exists
 	_, err := s.db.Exec(`INSERT OR IGNORE INTO config (id, board_name, sysop_name, bbs_start_date)
-		VALUES (1, 'TriBBS', 'Sysop', ?)`, time.Now().Format("01/02/2006"))
+		VALUES (1, 'TresBBS', 'Sysop', ?)`, time.Now().Format("01/02/2006"))
 	if err != nil {
 		return fmt.Errorf("insert default config: %w", err)
 	}

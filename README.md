@@ -88,7 +88,7 @@ in progress; system config imports today.)
 
 ```
 -addr string      Telnet listen address (default ":2323")
--db string         SQLite database path (default "tribbs.db")
+-db string         SQLite database path (default "tresbbs.db")
 -ssh string        SSH listen address (e.g., ":2222", empty to disable)
 -hostkey string    SSH host key path (default "ssh_host_key")
 -import string     Import an original TriBBS data directory into -db, then exit

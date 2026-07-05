@@ -64,7 +64,7 @@ func (r *REPProcessor) ProcessREP(repPath string, user *domain.User) (int, error
 // extractREPPacket extracts a REP packet (ZIP archive) to a temporary directory.
 func extractREPPacket(repPath string) (string, error) {
 	// Create temp directory
-	tempDir, err := os.MkdirTemp("", "tribbs-rep-*")
+	tempDir, err := os.MkdirTemp("", "tresbbs-rep-*")
 	if err != nil {
 		return "", err
 	}
@@ -306,7 +306,7 @@ func parseQWKDateTime(dateStr, timeStr string) time.Time {
 // This is useful for streaming uploads.
 func (r *REPProcessor) ProcessREPFromReader(reader io.Reader, user *domain.User) (int, error) {
 	// Create a temporary file to store the uploaded data
-	tempFile, err := os.CreateTemp("", "tribbs-rep-upload-*.zip")
+	tempFile, err := os.CreateTemp("", "tresbbs-rep-upload-*.zip")
 	if err != nil {
 		return 0, fmt.Errorf("creating temp file: %w", err)
 	}

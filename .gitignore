@@ -1,5 +1,5 @@
 # Binaries (anchored to repo root so they don't match cmd/* source dirs)
-/tribbs-admin
+/tresbbs-admin
 
 # Database
 *.db

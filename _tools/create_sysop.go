@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	storage, err := sqlite.New("tribbs.db")
+	storage, err := sqlite.New("tresbbs.db")
 	if err != nil {
 		panic(err)
 	}

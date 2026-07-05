@@ -31,7 +31,7 @@ func (s *Session) executeDoor(door domain.Door) {
 	s.storage.LogCaller(fmt.Sprintf("Executed door: %s at %s.", door.Name, startTime.Format("15:04")))
 
 	// Write drop files
-	dropDir := filepath.Join(os.TempDir(), "tribbs")
+	dropDir := filepath.Join(os.TempDir(), "tresbbs")
 	os.MkdirAll(dropDir, 0755)
 
 	// Write drop files. Like TriBBS, we write several formats for door

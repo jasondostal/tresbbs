@@ -1,6 +1,6 @@
-// Package telnet implements a Telnet server for tribbs.
+// Package telnet implements a Telnet server for tresbbs.
 //
-// In original TriBBS, callers dialed in via modem. In tribbs, they connect
+// In original TriBBS, callers dialed in via modem. In tresbbs, they connect
 // via Telnet (or SSH). This adapter maps a TCP connection to a BBS session —
 // each connection is a "phone line" that goes through the login sequence,
 // session, and logoff.
@@ -144,7 +144,7 @@ func Serve(sess *Session, storage port.StoragePort, nodes port.NodePort, config 
 	d.WriteLine("╔══════════════════════════════════════════════════════════════╗")
 	d.WriteLine("║                                                            ║")
 	d.SetColor('E') // Yellow
-	d.WriteLine("║                    Welcome to TriBBS                        ║")
+	d.WriteLine("║                    Welcome to TresBBS                       ║")
 	d.SetColor('A') // Green
 	d.WriteLine("║                                                            ║")
 	d.SetColor('B') // Cyan
