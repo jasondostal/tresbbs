@@ -6,15 +6,14 @@ grew up dialing into — written from scratch in Go. *("Tres" = French for "very
 
 ## Screenshots
 
-<!-- TODO: drop real captures into docs/screenshots/ and update these paths. -->
-![TresBBS main menu rendered over SSH](docs/screenshots/main-menu.png)
-*The main menu in glorious CP437/ANSI, served over SSH.*
+![TresBBS main menu in CP437/ANSI](docs/screenshots/main-menu.png)
+*The main menu in glorious CP437/ANSI — `<X>` hotkeys, the `@VARIABLE`/`@X` color engine, and TriBBS's persistent status bar pinned to the bottom.*
 
-![Reading a message conference](docs/screenshots/message-reader.png)
-*A message conference — the `@VARIABLE` template engine and `@X` color codes doing their thing.*
+![The bulletin menu](docs/screenshots/bulletins.png)
+*Bulletins, listed and numbered just like the original.*
 
-![A door game launching](docs/screenshots/door-launch.png)
-*Handing off to a door game via drop file, just like 1994.*
+![The TresBBS sysop console (WFC)](docs/screenshots/sysop-console.png)
+*The offline sysop console (`tresbbs-admin`) — the modern TRIMAN: Waiting-for-Caller screen, board stats, and keyboard-first editors for users, conferences, doors, and config.*
 
 ## What is this?
 
