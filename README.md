@@ -52,6 +52,18 @@ go build -o tresbbs-server ./cmd/tresbbs-server/
 telnet localhost 2323
 ```
 
+TresBBS is pure Go with no cgo dependencies (the SQLite driver is
+[modernc.org/sqlite](https://pkg.go.dev/modernc.org/sqlite)), so it needs
+no C toolchain and cross-compiles to a single static binary from any host:
+
+```bash
+CGO_ENABLED=0 GOOS=linux   GOARCH=amd64 go build -o tresbbs-server-linux   ./cmd/tresbbs-server/
+CGO_ENABLED=0 GOOS=linux   GOARCH=arm64 go build -o tresbbs-server-pi      ./cmd/tresbbs-server/
+CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o tresbbs-server.exe     ./cmd/tresbbs-server/
+```
+
+A Dockerfile and `docker-compose.yml` are included for container deploys.
+
 ### First Login
 
 There's no default account — it's a fresh board. Telnet in and register on first
