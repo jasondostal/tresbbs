@@ -193,6 +193,10 @@ func main() {
 
 				// Create the session with all adapters
 				display := ansi.New(conn.Reader(), conn.Writer())
+				// Put the telnet client into character-at-a-time mode with
+				// server echo, so single-key menus fire on the keypress
+				// instead of the client buffering a whole line until Enter.
+				display.NegotiateTelnet()
 				sess := session.New(display, storage, nodes, config, node, "Telnet", *menuDir, conn.RemoteAddr())
 				sess.Run()
 
@@ -232,8 +236,11 @@ func main() {
 					defer nodes.FreeNode(node)
 					defer conn.Close()
 
-					// Create the session with all adapters
+					// Create the session with all adapters. SSH is already
+					// character-at-a-time and does no local echo, so the
+					// server must echo typed input itself.
 					display := ansi.New(conn.Reader(), conn.Writer())
+					display.SetLocalEcho(true)
 					sess := session.New(display, storage, nodes, config, node, "SSH", *menuDir, conn.RemoteAddr())
 					sess.Run()
 

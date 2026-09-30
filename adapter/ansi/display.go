@@ -19,6 +19,21 @@ import (
 // Ensure we implement the port interface.
 var _ port.DisplayPort = (*Display)(nil)
 
+// Telnet command bytes (RFC 854/857/858). Used to negotiate character-at-a-time
+// mode with server echo — the mode a BBS needs so single-key menus fire on the
+// keypress instead of waiting for Enter.
+const (
+	telnetIAC  = 255 // Interpret As Command
+	telnetSE   = 240 // End of subnegotiation
+	telnetSB   = 250 // Begin subnegotiation
+	telnetWILL = 251
+	telnetWONT = 252
+	telnetDO   = 253
+	telnetDONT = 254
+	telnetEcho = 1 // option: ECHO
+	telnetSGA  = 3 // option: SUPPRESS-GO-AHEAD
+)
+
 // ANSI escape sequences
 const (
 	ClearScreen = "\033[2J\033[H"
@@ -49,10 +64,16 @@ type Display struct {
 	height int
 	ripRenderer *RIPRenderer
 
-	// localEcho makes ReadLine echo typed characters. Off by default: over
-	// telnet/SSH the client echoes. It is turned on for a local (raw-terminal)
-	// session — e.g. the sysop console's Local Logon — where nothing else does.
+	// localEcho makes ReadLine echo typed characters. Off by default. It is
+	// turned on when the server owns echo: telnet after we negotiate WILL ECHO
+	// (character-at-a-time mode), SSH (raw PTY, no client echo), and the local
+	// sysop console's Local Logon.
 	localEcho bool
+
+	// eatNextLF swallows the LF/NUL that trails a CR, so a CR, CR LF, or CR NUL
+	// line ending all look identical to callers regardless of client. Set when
+	// a read consumes a CR; honored (once) by the very next input read.
+	eatNextLF bool
 }
 
 // New creates a new ANSI display adapter.
@@ -120,11 +141,37 @@ func (d *Display) SetReverse(on bool) {
 	}
 }
 
+// readByte reads one data byte from the client, transparently consuming any
+// telnet IAC command sequence and swallowing the LF/NUL that trails a CR. This
+// is the single input primitive every reader is built on, so CR / CR LF / CR
+// NUL line endings — and stray negotiation traffic — look identical to callers
+// no matter which client (macOS telnet, PuTTY, SyncTERM, netcat, SSH) is on the
+// other end.
+func (d *Display) readByte() (byte, error) {
+	for {
+		b, err := d.reader.ReadByte()
+		if err != nil {
+			return 0, err
+		}
+		if b == telnetIAC {
+			d.skipTelnetCommand()
+			continue
+		}
+		if d.eatNextLF {
+			d.eatNextLF = false
+			if b == '\n' || b == 0 {
+				continue // trailing byte of a CR LF / CR NUL pair
+			}
+		}
+		return b, nil
+	}
+}
+
 // ReadLine implements DisplayPort.
 func (d *Display) ReadLine() (string, error) {
 	var line []byte
 	for {
-		b, err := d.reader.ReadByte()
+		b, err := d.readByte()
 		if err != nil {
 			if len(line) > 0 {
 				return string(line), nil
@@ -132,44 +179,22 @@ func (d *Display) ReadLine() (string, error) {
 			return "", err
 		}
 
-		// Skip telnet IAC sequences (255 followed by command)
-		if b == 255 {
-			// Read the next two bytes (command + option)
-			d.reader.ReadByte()
-			d.reader.ReadByte()
+		// Any CR or LF ends the line. On CR, swallow a following LF/NUL so a
+		// CRLF (or CR NUL) client doesn't leave a spurious empty line behind.
+		if b == '\r' || b == '\n' {
+			d.eatNextLF = b == '\r'
+			if d.localEcho {
+				d.write("\r\n")
+			}
+			return string(line), nil
+		}
+
+		// Stray NUL (telnet filler) — ignore.
+		if b == 0 {
 			continue
 		}
 
-		// Handle carriage return (telnet sends \r\n or \r\0)
-		if b == '\r' {
-			// Read the next byte - could be \n or \0 or nothing
-			next, err := d.reader.ReadByte()
-			if err == nil && next != '\n' && next != 0 {
-				// Not a line ending sequence, put it back
-				line = append(line, b)
-				line = append(line, next)
-				if d.localEcho {
-					d.write(string([]byte{b, next}))
-				}
-				continue
-			}
-			// It's a line ending — return the line (empty string on a blank
-			// line, so callers see the Enter instead of blocking for more input).
-			if d.localEcho {
-				d.write("\r\n")
-			}
-			return string(line), nil
-		}
-
-		// Handle bare newline
-		if b == '\n' {
-			if d.localEcho {
-				d.write("\r\n")
-			}
-			return string(line), nil
-		}
-
-		// Handle backspace
+		// Backspace / delete.
 		if b == 127 || b == 8 {
 			if len(line) > 0 {
 				line = line[:len(line)-1]
@@ -178,12 +203,12 @@ func (d *Display) ReadLine() (string, error) {
 			continue
 		}
 
-		// Handle Ctrl-C (cancel)
+		// Ctrl-C cancels.
 		if b == 3 {
 			return "", nil
 		}
 
-		// Normal character
+		// Normal character.
 		line = append(line, b)
 		if d.localEcho {
 			d.write(string(b))
@@ -191,13 +216,86 @@ func (d *Display) ReadLine() (string, error) {
 	}
 }
 
-// ReadKey implements DisplayPort.
+// ReadKey implements DisplayPort. It reads a single keystroke for instant menu
+// dispatch, transparently swallowing telnet IAC sequences and CR-pair trailers
+// (a client's negotiation replies or a stray LF must not read as a keypress).
+//
+// After the key, it drains any line terminator the client sent along with it.
+// A line-mode client (raw netcat, or a telnet client that refused char mode)
+// transmits a menu selection as "K\n" or "K\r\n" — without this, that trailing
+// newline leaks into the NEXT prompt and, e.g., instantly aborts the comment
+// editor with an empty first line. The drain is non-blocking (it only discards
+// bytes already buffered), so a char-mode client that sends a bare "K" is
+// unaffected.
 func (d *Display) ReadKey() (byte, error) {
-	b, err := d.reader.ReadByte()
+	b, err := d.readByte()
 	if err != nil {
 		return 0, err
 	}
+	if b == '\r' {
+		d.eatNextLF = true // swallow a following LF/NUL on the next read
+	}
+	d.drainBufferedEOL()
 	return b, nil
+}
+
+// drainBufferedEOL discards CR/LF/NUL bytes that are ALREADY buffered, without
+// reading from the connection (so it never blocks waiting on a char-mode client
+// that sent no terminator). Used after a single-key menu read to absorb a
+// line-mode client's trailing newline.
+func (d *Display) drainBufferedEOL() {
+	for d.reader.Buffered() > 0 {
+		p, err := d.reader.Peek(1)
+		if err != nil || (p[0] != '\r' && p[0] != '\n' && p[0] != 0) {
+			return
+		}
+		d.reader.ReadByte()
+		d.eatNextLF = false
+	}
+}
+
+// skipTelnetCommand consumes a telnet IAC command sequence after the leading
+// IAC (255) byte has already been read. WILL/WONT/DO/DONT carry one option
+// byte; SB…SE is variable-length; a doubled IAC is an escaped literal 255.
+func (d *Display) skipTelnetCommand() {
+	cmd, err := d.reader.ReadByte()
+	if err != nil {
+		return
+	}
+	switch cmd {
+	case telnetWILL, telnetWONT, telnetDO, telnetDONT:
+		d.reader.ReadByte() // consume the option byte
+	case telnetSB:
+		for { // read until IAC SE
+			b, err := d.reader.ReadByte()
+			if err != nil {
+				return
+			}
+			if b == telnetIAC {
+				se, err := d.reader.ReadByte()
+				if err != nil || se == telnetSE {
+					return
+				}
+			}
+		}
+	}
+	// Any other command (NOP, doubled-IAC literal, etc.) is a bare 2-byte
+	// sequence we've now fully consumed.
+}
+
+// NegotiateTelnet puts a telnet client into character-at-a-time mode with
+// server-side echo — the mode a BBS needs for instant single-key menus. It
+// sends WILL ECHO + WILL/DO SUPPRESS-GO-AHEAD and switches on local (server)
+// echo so typed input still shows. Call once, right after the telnet
+// connection is accepted and before any prompt. SSH is already char-mode and
+// uses SetLocalEcho(true) directly instead.
+func (d *Display) NegotiateTelnet() {
+	d.write(string([]byte{
+		telnetIAC, telnetWILL, telnetEcho,
+		telnetIAC, telnetWILL, telnetSGA,
+		telnetIAC, telnetDO, telnetSGA,
+	}))
+	d.localEcho = true
 }
 
 // ReadPassword implements DisplayPort — reads input with echo disabled.
@@ -207,14 +305,17 @@ func (d *Display) ReadPassword() (string, error) {
 
 	var password []byte
 	for {
-		b, err := d.reader.ReadByte()
+		b, err := d.readByte()
 		if err != nil {
 			return "", err
 		}
 		switch b {
 		case '\r', '\n':
+			d.eatNextLF = b == '\r'
 			d.write("\r\n")
 			return string(password), nil
+		case 0: // stray NUL — ignore
+			continue
 		case 127, 8: // backspace
 			if len(password) > 0 {
 				password = password[:len(password)-1]

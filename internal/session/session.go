@@ -1520,9 +1520,9 @@ func (s *Session) chatRequest() {
 	}
 	s.display.ResetColor()
 	s.pause()
-
-	// Teleconference / node paging remain available as a modern extra.
-	s.chatMenu()
+	// TriBBS <P> pages the sysop and returns to the menu. The live
+	// teleconference is its own command (<T> TeleChat), so we don't drop the
+	// caller into it here.
 }
 
 // whoOnline shows who's currently logged in.
