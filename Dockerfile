@@ -1,13 +1,13 @@
-FROM golang:1.22-alpine AS builder
+FROM golang:1.26-alpine AS builder
 
 WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
-RUN CGO_ENABLED=1 go build -o tresbbs-server ./cmd/tresbbs-server
+RUN CGO_ENABLED=0 go build -o tresbbs-server ./cmd/tresbbs-server
 
 FROM alpine:3.19
-RUN apk add --no-cache sqlite-libs ca-certificates
+RUN apk add --no-cache ca-certificates
 WORKDIR /bbs
 COPY --from=builder /app/tresbbs-server /usr/local/bin/
 COPY templates/ ./templates/

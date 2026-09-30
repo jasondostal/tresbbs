@@ -11,9 +11,9 @@ import (
 	"strconv"
 	"time"
 
-	_ "github.com/mattn/go-sqlite3"
 	"github.com/jasondostal/tresbbs/domain"
 	"github.com/jasondostal/tresbbs/port"
+	_ "modernc.org/sqlite" // pure-Go driver: no cgo, cross-compiles cleanly
 )
 
 // Ensure we implement the port interface.
@@ -26,7 +26,7 @@ type Storage struct {
 
 // New creates a new SQLite storage backend.
 func New(dbPath string) (*Storage, error) {
-	db, err := sql.Open("sqlite3", dbPath+"?_journal_mode=WAL&_busy_timeout=5000")
+	db, err := sql.Open("sqlite", dbPath+"?_pragma=journal_mode(WAL)&_pragma=busy_timeout(5000)")
 	if err != nil {
 		return nil, fmt.Errorf("open sqlite: %w", err)
 	}
